@@ -1,0 +1,43 @@
+:root {
+    --calculator-height: 30vh;
+    --calculator-width: 30vw;
+    --converter-input-width: 200px;
+}
+
+.converter-container {
+    height: var(--calculator-height);
+    width: var(--calculator-width);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+}
+
+.converter-input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.converter-input{
+    width: var(--converter-input-width);
+}
+
+.unit-select {
+    width: var(--converter-input-width);
+}
+
+.converter-units {
+    display: flex;
+}
+
+.main-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
