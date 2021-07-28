@@ -1,56 +1,50 @@
-import {Type, Unit} from './Types';
+import {Type} from './Types';
 
 export const calculate = (type, unitFrom, unitTo, value) => {
-    //console.log(unitFrom + ' ' + unitTo);
-    if(Type[type] && Unit[unitFrom] && Unit[unitTo] && value && !isNaN(value)){
+    if(!value || isNaN(value)){
+        return '';
+    }
+    if(Type[type]){
+        let result = 0;
         if(unitFrom === unitTo){
             return value;
         }
-        
-        if(Type[type] == Type.TIME){
-            return value * (Unit[unitFrom].factor / Unit[unitTo].factor);
+        if(Type[type] == Type.TEMPERATURE){
+            result = calculateTemperature(unitFrom, unitTo, value);
         }
-
-        if(Unit[unitFrom] === Unit.CELSIUS && Unit[unitTo] === Unit.FAHRENHEIT){
-            return (value * (9/5)) + 32;
+        else {
+            result = value * (Type[type].units[unitFrom].factor / Type[type].units[unitTo].factor);
         }
-        if(Unit[unitFrom] === Unit.CELSIUS && Unit[unitTo] === Unit.KELVIN){
-            return value + 273.15;
-        }
-        if(Unit[unitFrom] === Unit.FAHRENHEIT && Unit[unitTo] === Unit.CELSIUS){
-            return (value - 32) * (5/9);
-        }
-        if(Unit[unitFrom] === Unit.FAHRENHEIT && Unit[unitTo] === Unit.KELVIN){
-            return ((value - 32) * (5/9)) + 273.15;
-        }
-        if(Unit[unitFrom] === Unit.KELVIN && Unit[unitTo] === Unit.CELSIUS){
-            return value - 273.15;
-        }
-        if(Unit[unitFrom] === Unit.KELVIN && Unit[unitTo] === Unit.FAHRENHEIT){
-            return (value - 273.15) * (9/5) + 32;
-        }
-
-       /* if(Unit[unitFrom] === Unit.HOURS && Unit[unitTo] === Unit.SECONDS){
-            return value * 3600;
-        }
-        if(Unit[unitFrom] === Unit.HOURS && Unit[unitTo] === Unit.MINUTES){
-            return value * 60;
-        }
-        if(Unit[unitFrom] === Unit.MINUTES && Unit[unitTo] === Unit.HOURS){
-            return value / 60;
-        }
-        if(Unit[unitFrom] === Unit.MINUTES && Unit[unitTo] === Unit.SECONDS){
-            return value * 60;
-        }
-        if(Unit[unitFrom] === Unit.SECONDS && Unit[unitTo] === Unit.HOURS){
-            return value / 3600;
-        }
-        if(Unit[unitFrom] === Unit.SECONDS && Unit[unitTo] === Unit.MINUTES){
-            return value / 60;
-        }*/
-
-
-        return 20;
+        return result; //.toFixed(2);
     }
     return 0;
 }
+
+const calculateTemperature = (unitFrom, unitTo, value) => {
+    const celsius = Object.keys(Type.TEMPERATURE.units)[0];
+    const fahrenheit = Object.keys(Type.TEMPERATURE.units)[1];
+    const kelvin = Object.keys(Type.TEMPERATURE.units)[2];
+    const kelvinOffset = 273.15;
+
+    let result = value;
+
+    // If temperature is not in C, convert to C
+    if(unitFrom === kelvin){
+        result -= kelvinOffset;
+    }
+    else if(unitFrom == fahrenheit){
+        result = (result - 32) * (5/9);
+    }
+
+    //At this point, temperature is in C
+    // Convert to K or F if needed
+    if(unitTo === kelvin){
+        result += kelvinOffset;
+    }
+    else if(unitTo == fahrenheit){
+        result = result * (9/5) + 32;
+    }
+    
+    return result;
+}
+
