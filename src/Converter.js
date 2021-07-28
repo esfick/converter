@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './Converter.css';
 import {Type} from './Types'; 
-import {calculate} from './CalculationFunctions';
+import {calculate, formatResult} from './CalculationFunctions';
+import SwapHorizSharpIcon from '@material-ui/icons/SwapHorizSharp';
 
 export default class Converter extends Component {
 
@@ -36,7 +37,7 @@ export default class Converter extends Component {
             <div className="main-container">
                 <div className="converter-container">
                     <div className="converter-type">
-                        <select className="converter-select" onChange = {this.onTypeChange}>
+                        <select className="converter-select type-select" onChange = {this.onTypeChange}>
                             {typeOptions}
                         </select>
                     </div>
@@ -47,9 +48,9 @@ export default class Converter extends Component {
                                 {unitOptions}
                             </select>
                         </div>
-                        <div>
-
-                            <button onClick={this.reverseUnits}>{'<-- -->'}</button>
+                        <div className="center-container">
+                            <div className="equals-symbol">=</div>
+                            <button className="swap-button" onClick={this.reverseUnits} title="Swap units"><SwapHorizSharpIcon></SwapHorizSharpIcon></button>
                         </div>
                         <div className="converter-input-container">
                             <input className="converter-input" type="number" value={this.state.result} disabled/>
@@ -67,8 +68,9 @@ export default class Converter extends Component {
         const unitFrom = document.getElementById('select-unit-1').value;
         const unitTo = document.getElementById('select-unit-2').value;
         const value = document.getElementById('number-input').value;
+        const result = calculate(this.state.type, unitFrom, unitTo, value);
         this.setState({
-           result: calculate(this.state.type, unitFrom, unitTo, value) 
+           result: formatResult(result) 
         });
     }
 
